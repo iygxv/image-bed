@@ -26,7 +26,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'imageBed',
+    outDir: 'dist',
     assetsDir: 'imageBed/assets'
   }
 })

@@ -1,11 +1,5 @@
 <template>
   <Header/>
-  <div class="storage-btn">
-    <el-button type="primary" @click="handleLocalStorage">将表格数据存储到本地存储</el-button>
-  </div>
-  <div class="storage-btn2">
-    <el-button type="danger" @click="handleDelLocalStorage">删除本地存储</el-button>
-  </div>
   <div class="container">
     <el-upload
       class="upload-demo"
@@ -35,7 +29,8 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template #default="{ row, $index }">
-          <el-button type="primary" @click="handleCopyPath(row, $index)">复制路径</el-button>
+          <el-button type="primary" @click="handleCopyPath(row)">复制路径</el-button>
+          <el-button type="danger" @click="handleDelete($index)">移除数据</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -63,6 +58,10 @@ const getLocalStorage = () => {
 }
 onMounted(() => {
   getLocalStorage()
+
+  window.onbeforeunload = function() {
+    localStorage.setItem('image-bed-data', JSON.stringify(tableData))
+  }
 })
 
 const handleSuccessUpload: UploadProps['onSuccess'] =(response, uploadFile) => {
@@ -90,12 +89,8 @@ const handleCopyPath = async(row) => {
   ElMessage.success("复制成功");
 }
 
-const handleLocalStorage = () => {
-  if(tableData.length === 0) {
-    return
-  }
-  localStorage.setItem('image-bed-data', JSON.stringify(tableData))
-  ElMessage.success('存储成功')
+const handleDelete = (index) => {
+  tableData.splice(index, 1)
 }
 </script>
  
@@ -119,17 +114,5 @@ a {
 }
 ::v-deep(.el-table) {
   margin-top: 10px;
-}
-.storage-btn {
-  position: fixed;
-  top: 30px;
-  right: 80px;
-  z-index: 9999999;
-}
-.storage-btn2 {
-  position: fixed;
-  top: 30px;
-  right: 300px;
-  z-index: 9999999;
 }
 </style>
